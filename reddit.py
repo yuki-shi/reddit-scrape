@@ -1,3 +1,4 @@
+# Importing necessary modules
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -5,16 +6,44 @@ import datetime as dt
 
 class Reddit():
   def __init__(self, driver_path):
+    """
+    Initializes the Reddit class with the driver path.
+
+    Args:
+    driver_path (str): The path of the webdriver.
+
+    Returns:
+    None
+    """
     self.driver_path = driver_path
     self.driver = self.init_driver()
 
   def init_driver(self):
+    """
+    Initializes the webdriver with the specified options.
+
+    Args:
+    None
+
+    Returns:
+    webdriver.Chrome: The initialized webdriver.
+    """
     options = Options()
     options.headless = True
     options.add_argument("--window-size=1920,1200")
     return webdriver.Chrome(options=options, executable_path=self.driver_path)
 
   def extract_page_source(self, url, data_limite):
+    """
+    Extracts the page source of the given url until the specified date.
+
+    Args:
+    url (str): The url of the page to extract.
+    data_limite (str): The date until which to extract the page source in the format 'YYYY/MM/DD'.
+
+    Returns:
+    str: The concatenated page source of all the pages extracted.
+    """
     self.driver.get(url)
     self.driver.find_element(By.XPATH, '/html/body/div[3]/div/form/div/button[2]').click()
 
@@ -22,7 +51,6 @@ class Reddit():
 
     pages = []
     data_final = dt.datetime.now()
-    #re_pattern = r'(?<= {1}).{3} [0-9]+(?= )'
 
     while data_final > data_limite:
       pages.extend(self.driver.page_source)
@@ -38,4 +66,5 @@ class Reddit():
     #  for page in pages:
     #    f.write(page)
 
-    return ''.join(pages) # tornamos a lista uma str para preparar para o BeautifulSoup
+  # converting list to string for BeautifulSoup
+    return ''.join(pages) 
