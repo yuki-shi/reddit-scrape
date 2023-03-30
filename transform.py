@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os.path
 
-def transform_to_dataframe(page_source):
+def transform_to_dataframe(page_source: str) -> None:
   """
   This function takes in the page source of a Reddit page and extracts relevant information from it to create a pandas dataframe.
   
@@ -11,7 +11,7 @@ def transform_to_dataframe(page_source):
   page_source (str): The HTML source code of the Reddit page.
   
   Returns:
-  pandas.DataFrame: A dataframe containing information about the posts on the Reddit page.
+  CSV file.
   """
   
   # Parsing the HTML source code using BeautifulSoup
@@ -41,5 +41,4 @@ def transform_to_dataframe(page_source):
   # Printing the absolute path of the saved CSV file
   print(f'.csv salvo em {os.path.abspath("reddit_data.csv")}')
   
-  # Returning the dataframe
-  return df
+  return
