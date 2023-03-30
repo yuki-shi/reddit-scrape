@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 import datetime as dt
 
 class Reddit():
-  def __init__(self, driver_path):
+  def __init__(self, driver_path: str):
     """
     Initializes the Reddit class with the driver path.
 
@@ -33,7 +33,7 @@ class Reddit():
     options.add_argument("--window-size=1920,1200")
     return webdriver.Chrome(options=options, executable_path=self.driver_path)
 
-  def extract_page_source(self, url, data_limite):
+  def extract_page_source(self, url: str, data_limite: str) -> str:
     """
     Extracts the page source of the given url until the specified date.
 
@@ -45,13 +45,20 @@ class Reddit():
     str: The concatenated page source of all the pages extracted.
     """
     self.driver.get(url)
+    
+    # TODO: this only happens on subreddits tagged as +18, add an exception
     self.driver.find_element(By.XPATH, '/html/body/div[3]/div/form/div/button[2]').click()
 
+    # Converting end date to datetime object 
     data_limite = (dt.datetime.strptime(data_limite, '%Y/%m/%d'))#.strftime('%b %d')
 
+    # Creating an empty list to store the source code of each page
     pages = []
+    
+    # Creating a dummy value for the iteration
     data_final = dt.datetime.now()
 
+    # Browse and extract each page until the last post's date matches the desired end date
     while data_final > data_limite:
       pages.extend(self.driver.page_source)
       dates = [x.get_attribute('title') for x in self.driver.find_elements(By.TAG_NAME, 'time')]
@@ -62,9 +69,5 @@ class Reddit():
 
     print('Extração completa!')
 
-    #with open('source.html', 'w') as f:
-    #  for page in pages:
-    #    f.write(page)
-
-  # converting list to string for BeautifulSoup
+  # Converting list to a concatenated string for BeautifulSoup
     return ''.join(pages) 
